@@ -1,0 +1,78 @@
+*asyncomplete-html.jax* HTML の class, id 名の補完
+
+Author:  Iranoan <iranoan+vim@gmail.com>
+License: GPL Ver.3.
+
+==============================================================================
+                                                *asyncomplete-html-introduction*
+Introduction~
+
+* asyncomplete.vim (https://github.com/prabirshrestha/asyncomplete.vim) の補完で
+	* HTML の class, id 名の補完候補をだす
+		* 次の設定時のオムニ補完と違い指定済みの class, id は補完候補から除外する >
+			setlocal omnifunc=lsp#complete
+<	* HTML タグ内の href/src 属性でパスの補完をする
+		* a タグの href 属性では id の補完もする
+		* >
+		let g:asyncomplete_auto_completeopt = 0
+		set completeopt=menuone,noinsert,noselect,popup
+<		と completeopt に popupが有れば、次を追加で表示する
+		* HTML/XHTML ファイル名の補完ならタイトル
+		* id の属性値なら要素の内容か 40 行先まで
+
+==============================================================================
+                                                 *asyncomplete-html-restriction*
+Restriction~
+
+* タグ固有の class, id の属性値は同一行である必要がある
+	* 異なる行ではグローバルな値のみリスト・アップする
+* class, id の属性値の絞り込みはタグの子孫要素は考慮しない
+* リストアップするのは
+	* 次の様に具体的に指定したローカル・ファイルの
+		* HTML ファイルの head 要素内の次のような指定 >
+			<link rel="stylesheet" type="text/css" href="default.css">
+<		* style 要素内や CSS ファイル内の次のような指定 >
+			@import url(default.css);
+<	* class/id 名の判定はゆるいので、余分な候補が含まれる場合も有る
+* |syntax| の {group-name} (構文グループ名) で htmlString, htmlValue, htmlTag を
+	条件にしているので >
+		syntax on
+<	にする必要がある
+
+==============================================================================
+                                                   *asyncomplete-html-attention*
+Attention~
+
+* デフォルトで class, id 名扱いにするのは [0-9A-Za-z_-] (英数字と -_)、ファイル
+	名は [0-9A-Za-z._-] 相当
+	* asyncomplete#sources#html_id#GetSourceOptions() の refresh_pattern を |/\c|
+		(大文字小文字区別なし) 相当で URL に使われる /, # も加えて指定する
+* vim9script で書かれているので、asyncomplete の他のソースと異なり、上に有る通
+	り関数名がスネーク・ケースではなく、アッパー・キャメル・ケースになっているの
+	で設定時に注意が必要
+
+==============================================================================
+                                                     *asyncomplete-html-require*
+Require~
+
+* Vim 9.0 以上
+* asyncomplete.vim (https://github.com/prabirshrestha/asyncomplete.vim)
+* NeoVim では動作しない
+
+==============================================================================
+                                                         *asyncomplete-html-set*
+Setting~
+
+~/.vim/vimrc などの設定ファイルに次のような記載を加える
+
+	Example: >
+		call asyncomplete#register_source(asyncomplete#sources#html_id#GetSourceOptions({}))
+<
+==============================================================================
+                                                         *asyncomplete-html-use*
+Use~
+
+設定が終われば、class/id の属性値で asyncomplete.vim
+(https://github.com/prabirshrestha/asyncomplete.vim) の補完候補に現れる
+
+vim:tw=78:ts=2:ft=help:norl:noet:fen:
