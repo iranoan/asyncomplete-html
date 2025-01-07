@@ -39,7 +39,7 @@ def GetIdCore(lines_org: list<string>, p: list<string>, cls_ids: dict<dict<list<
 	var arg: string
 	var paths: list<string> = p
 	var class_ids: dict<dict<list<string>>> = cls_ids
-	var search_s: string = '\c\([a-z]*\)\([.#]\)\(' .. pat .. '*\)'
+	var search_s: string = '\c\([a-z]\+\|h[1-6]\)\?\([.#]\)\(' .. pat .. '*\)'
 	var comment_f: number # 0x1: コメント内、0x2: コメント開始終了が書かれた行
 	var line: string
 
@@ -251,7 +251,7 @@ export def Completor(opt: dict<any>, ctx: dict<any>): void
 		def IdCore(lines_org: list<string>): list<dict<string>>
 			def Around(lines: list<string>, s: string, m: string): string
 				var around: list<string> = [s[matchstrpos(s, m)[1] : ]]
-				var tags: list<string> = matchstrlist([s[matchstrpos(s, m)[1] : ]], '<\zs/\?[a-z]\+\>')->map((_, v) => v.text)
+				var tags: list<string> = matchstrlist([s[matchstrpos(s, m)[1] : ]], '<\zs/\?\([a-z]\+\|h[1-6]\)\>')->map((_, v) => v.text)
 				var c_tags: list<string>
 				var tag1st = tags[0]
 				var num: number = 0
@@ -302,7 +302,7 @@ export def Completor(opt: dict<any>, ctx: dict<any>): void
 							)
 						break
 					endif
-					tags += matchstrlist([substitute(l, '<!--\([^>]\|[^-]>\|[^-]->\)*-->', '', 'g')], '<\zs/\?[a-z]\+\>')->map((_, v) => v.text)
+					tags += matchstrlist([substitute(l, '<!--\([^>]\|[^-]>\|[^-]->\)*-->', '', 'g')], '<\zs/\?\([a-z]\+\|h[1-6]\)\>')->map((_, v) => v.text)
 					add(around, l)
 					num += 1
 				endfor
@@ -310,7 +310,7 @@ export def Completor(opt: dict<any>, ctx: dict<any>): void
 			enddef
 
 			var lines: list<string> = mapnew(lines_org, (_, v) => v->substitute('/\*\([^/]\|[^*]/\)*\*/', '', 'g'))
-			var search_s: string = '\c\(<[a-z]\+\>[^>]*\)\?\<id=\("\(' .. id_pat .. '*\)"\|''\(' .. id_pat .. '*\)''\|\(' .. id_pat .. '*\)\)'
+			var search_s: string = '\c\(<[a-z]\+\>[^>]*\|<h[1-6]\>[^>]*\)\?\<id=\("\(' .. id_pat .. '*\)"\|''\(' .. id_pat .. '*\)''\|\(' .. id_pat .. '*\)\)'
 			var match_l: number
 			var all: string
 			var s: string
@@ -391,7 +391,7 @@ export def Completor(opt: dict<any>, ctx: dict<any>): void
 		return
 	endif
 	match_s = matchlist(typed,
-		'\c\%(<\([a-z]\+\)\>[^>]*\)\?\<\%(\(class\|id\)=["'']\?\(\%(' .. id_pat .. '*\|[ \t]\)*\)\|\(src\|href\)=["'']\(\~\?' .. f_pat ..  '*\)\(#\(' .. id_pat .. '*\)\?\)\?\)$')
+		'\c\%(<\([a-z]\+\|h[1-6]\)\>[^>]*\)\?\<\%(\(class\|id\)=["'']\?\(\%(' .. id_pat .. '*\|[ \t]\)*\)\|\(src\|href\)=["'']\(\~\?' .. f_pat ..  '*\)\(#\(' .. id_pat .. '*\)\?\)\?\)$')
 	if !match_s
 		return
 	endif
