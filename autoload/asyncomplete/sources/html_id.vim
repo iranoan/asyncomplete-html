@@ -410,4 +410,3 @@ export def Completor(opt: dict<any>, ctx: dict<any>): void
 	asyncomplete#complete(opt['name'], ctx, col, matches, 1)
 	return
 enddef
-defcompile
