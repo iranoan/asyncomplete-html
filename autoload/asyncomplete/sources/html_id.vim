@@ -283,7 +283,6 @@ export def Completor(opt: dict<any>, ctx: dict<any>): void
 								i += 1
 							else
 								i += 2
-							else
 							endif
 						endwhile
 						if i == tags_n
