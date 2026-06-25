@@ -105,7 +105,7 @@ export def Completor(opt: dict<any>, ctx: dict<any>): void
 	var kind: string = synIDattr(synID(line('.'), col('.'), 1), 'name')
 	var pat: string = asyncomplete#sources#html_id#GetSourceOptions({}).refresh_pattern
 	var f_pat: string = substitute(pat, '#', '', 'g')
-	var id_pat: string = '\c[a-z]' .. substitute(f_pat, '[/.]', '', 'g')
+	var id_pat: string = '\c[a-z0-9]' .. substitute(f_pat, '[/.]', '', 'g')
 	var class_ids: dict<dict<list<string>>> = {'*': {class: [], id: []}}
 	f_pat = '\c' .. f_pat
 
